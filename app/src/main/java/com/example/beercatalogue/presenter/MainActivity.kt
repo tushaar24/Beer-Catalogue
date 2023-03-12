@@ -1,7 +1,8 @@
-package com.example.beercatalogue
+package com.example.beercatalogue.presenter
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.beercatalogue.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

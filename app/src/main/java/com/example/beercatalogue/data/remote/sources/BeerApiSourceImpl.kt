@@ -1,9 +1,9 @@
-package com.example.beercatalogue.data.remote.repository
+package com.example.beercatalogue.data.remote.sources
 
 import com.example.beercatalogue.data.remote.api.BeersApiService
 import javax.inject.Inject
 
-class NetworkRepository @Inject constructor(
+class BeerApiSourceImpl @Inject constructor(
     private val beersApiService: BeersApiService
 ) {
     suspend fun getBeersCatalogue(

@@ -1,4 +1,4 @@
-package com.example.beercatalogue.data.local.repository
+package com.example.beercatalogue.data.local.sources
 
 import android.util.Log
 import androidx.paging.LoadType
@@ -9,7 +9,7 @@ import com.example.beercatalogue.data.local.database.BeerCatalogueDatabase
 import com.example.beercatalogue.data.local.entity.BeerRemoteKeys
 import javax.inject.Inject
 
-class LocalDbRepository @Inject constructor(
+class LocalDbSourceImpl @Inject constructor(
     private val beerCatalogueDatabase: BeerCatalogueDatabase
 ) {
     private val beerCatalogueDao = beerCatalogueDatabase.getBeerCatalogueDao()

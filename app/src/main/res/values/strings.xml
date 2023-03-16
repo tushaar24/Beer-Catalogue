@@ -2,4 +2,13 @@
     <string name="app_name">Beer Catalogue</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="beer_catalogue_discover_beer_title">Discover Beers</string>
+    <string name="beer_details_back_button_description">To go back to beer catalogue</string>
+    <string name="splash_app_name">Beer \nCatalogue</string>
+    <string name="onboarding_find_best_beers">Find Best Beers</string>
+    <string name="onboarding_description">Whether you\'re a seasoned beer aficionado or a curious novice, our beer catalogue can help you discover, learn about, and enjoy the many different styles and flavors of beer.</string>
+    <string name="onboarding_next_button">NEXT</string>
+    <string name="beer_details_description_title">Description</string>
+    <string name="beer_details_brewer_tips_title">Brewer Tips</string>
+    <string name="beer_details_abv">Abv %1$.1f</string>
 </resources>

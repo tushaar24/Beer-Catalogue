@@ -4,6 +4,8 @@ import com.example.beercatalogue.data.local.database.BeerCatalogueDatabase
 import com.example.beercatalogue.data.local.sources.LocalDbSourceImpl
 import com.example.beercatalogue.data.remote.api.BeersApiService
 import com.example.beercatalogue.data.remote.sources.BeerApiSourceImpl
+import com.example.beercatalogue.domain.sources.BeerApiSource
+import com.example.beercatalogue.domain.sources.LocalDbSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +20,7 @@ object SourcesModule {
     @Singleton
     fun provideLocalDbSource(
         beerCatalogueDatabase: BeerCatalogueDatabase
-    ): LocalDbSourceImpl {
+    ): LocalDbSource {
         return LocalDbSourceImpl(beerCatalogueDatabase)
     }
 
@@ -26,7 +28,7 @@ object SourcesModule {
     @Singleton
     fun provideBeerApiSource(
         beersApiService: BeersApiService
-    ): BeerApiSourceImpl {
+    ): BeerApiSource {
         return BeerApiSourceImpl(beersApiService)
     }
 

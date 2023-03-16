@@ -2,4 +2,58 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_nav" />
+    android:id="@+id/main_nav"
+    app:startDestination="@id/splashScreenFragment">
+    <fragment
+        android:id="@+id/beerCatalogueListFragment"
+        android:name="com.example.beercatalogue.presenter.beerCatalogue.BeerCatalogueListFragment"
+        android:label="fragment_beer_catalogue_list"
+        tools:layout="@layout/fragment_beer_catalogue_list" >
+        <action
+            android:id="@+id/action_beerCatalogueListFragment_to_beerDetailsFragment"
+            app:destination="@id/beerDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/beerDetailsFragment"
+        android:name="com.example.beercatalogue.presenter.beerDetails.BeerDetailsFragment"
+        android:label="fragment_beer_details"
+        tools:layout="@layout/fragment_beer_details" >
+        <argument
+            android:name="beerDetails"
+            app:argType="com.example.beercatalogue.data.common.entity.BeerEntity" />
+        <action
+            app:popUpTo="@id/main_nav"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_beerDetailsFragment_to_beerCatalogueListFragment"
+            app:destination="@id/beerCatalogueListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/onBoardingFragment"
+        android:name="com.example.beercatalogue.presenter.onBoarding.OnBoardingFragment"
+        android:label="fragment_on_boarding"
+        tools:layout="@layout/fragment_on_boarding" >
+        <action
+            app:popUpTo="@id/onBoardingFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_onBoardingFragment_to_beerCatalogueListFragment"
+            app:destination="@id/beerCatalogueListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.beercatalogue.presenter.splashScreen.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"
+            android:id="@+id/action_splashScreenFragment_to_onBoardingFragment"
+            app:destination="@id/onBoardingFragment" />
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/splashScreenFragment"
+            app:launchSingleTop="true"
+            android:id="@+id/action_splashScreenFragment_to_beerCatalogueListFragment"
+            app:destination="@id/beerCatalogueListFragment" />
+    </fragment>
+</navigation>

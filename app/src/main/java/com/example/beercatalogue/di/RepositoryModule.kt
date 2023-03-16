@@ -3,6 +3,7 @@ package com.example.beercatalogue.di
 import com.example.beercatalogue.data.common.repository.RepositoryImpl
 import com.example.beercatalogue.data.local.sources.LocalDbSourceImpl
 import com.example.beercatalogue.data.remote.sources.BeerApiSourceImpl
+import com.example.beercatalogue.domain.repository.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +19,7 @@ object RepositoryModule {
     fun provideRepository(
         local: LocalDbSourceImpl,
         remote: BeerApiSourceImpl
-    ): RepositoryImpl {
+    ): Repository {
         return RepositoryImpl(local, remote)
     }
 

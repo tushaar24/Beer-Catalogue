@@ -7,12 +7,26 @@ import androidx.paging.RemoteMediator
 import com.example.beercatalogue.data.common.entity.BeerEntity
 import com.example.beercatalogue.data.common.repository.RepositoryImpl
 import com.example.beercatalogue.data.local.entity.BeerRemoteKeys
+import com.example.beercatalogue.utils.Constant.DEFAULT_PAGE
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
 class BeerCatalogueRemoteMediator @Inject constructor(
     private val repositoryImpl: RepositoryImpl
 ) : RemoteMediator<Int, BeerEntity>() {
+
+    override suspend fun initialize(): InitializeAction {
+        val remoteKeys = repositoryImpl?.local?.getRemoteKeys(1)?.lastTimeUpdated ?: 0
+        val cacheTimeout = 1440
+
+        val cacheExpired = (System.currentTimeMillis() - remoteKeys) > (cacheTimeout * 60 * 1000)
+
+        return if (cacheExpired) {
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        } else {
+            InitializeAction.SKIP_INITIAL_REFRESH
+        }
+    }
 
     override suspend fun load(
         loadType: LoadType,
@@ -21,16 +35,11 @@ class BeerCatalogueRemoteMediator @Inject constructor(
         return try {
             val currentPage = when (loadType) {
                 LoadType.PREPEND -> {
-                    val remoteKeys = getRemoteKeysClosestToCurrentPosition(state)
-                    remoteKeys?.nextPage?.minus(1) ?: 1
+                    return MediatorResult.Success(endOfPaginationReached = false)
                 }
                 LoadType.REFRESH -> {
                     val remoteKeys = getRemoteKeyForFirstItem(state)
-                    val prevPage = remoteKeys?.prevPage
-                        ?: return MediatorResult.Success(
-                            endOfPaginationReached = remoteKeys != null
-                        )
-                    prevPage
+                    remoteKeys?.nextPage?.minus(1) ?: 1
                 }
                 LoadType.APPEND -> {
                     val remoteKeys = getRemoteKeysForLastItem(state)
@@ -51,7 +60,8 @@ class BeerCatalogueRemoteMediator @Inject constructor(
                 response.body()!!,
                 prevPage,
                 nextPage,
-                loadType
+                loadType,
+                System.currentTimeMillis()
             )
 
             MediatorResult.Success(endOfPaginationReached)
@@ -60,19 +70,12 @@ class BeerCatalogueRemoteMediator @Inject constructor(
         }
     }
 
-    private suspend fun getRemoteKeysClosestToCurrentPosition(state: PagingState<Int, BeerEntity>): BeerRemoteKeys? {
-        return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { id ->
-                repositoryImpl.local.getRemoteKeys(id)
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, BeerEntity>): BeerRemoteKeys? {
+        return state.anchorPosition?.let { remoteKey ->
+            state.closestItemToPosition(remoteKey)?.let {
+                repositoryImpl.local.getRemoteKeys(it.id)
             }
         }
-    }
-
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, BeerEntity>): BeerRemoteKeys? {
-        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
-            ?.let { beer ->
-                repositoryImpl.local.getRemoteKeys(beer.id)
-            }
     }
 
     private suspend fun getRemoteKeysForLastItem(state: PagingState<Int, BeerEntity>): BeerRemoteKeys? {

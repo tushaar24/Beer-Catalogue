@@ -7,45 +7,46 @@ import androidx.room.withTransaction
 import com.example.beercatalogue.data.common.entity.BeerEntity
 import com.example.beercatalogue.data.local.database.BeerCatalogueDatabase
 import com.example.beercatalogue.data.local.entity.BeerRemoteKeys
+import com.example.beercatalogue.domain.sources.LocalDbSource
 import javax.inject.Inject
 
 class LocalDbSourceImpl @Inject constructor(
     private val beerCatalogueDatabase: BeerCatalogueDatabase
-) {
+) : LocalDbSource {
     private val beerCatalogueDao = beerCatalogueDatabase.getBeerCatalogueDao()
     private val beerCatalogueRemoteKeysDao = beerCatalogueDatabase.getBeerCatalogueRemoteKeysDao()
 
-    fun getBeerCatalogue(): PagingSource<Int, BeerEntity> {
+    override fun getBeerCatalogue(): PagingSource<Int, BeerEntity> {
         return beerCatalogueDao.getBeerCatalogue()
     }
 
-    private suspend fun addBeerCatalogue(beerCatalogue: List<BeerEntity>) {
+    override suspend fun addBeerCatalogue(beerCatalogue: List<BeerEntity>) {
         beerCatalogueDao.addBeerCatalogue(beerCatalogue)
     }
 
-    private suspend fun deleteBeerCatalogue() {
+    override suspend fun deleteBeerCatalogue() {
         beerCatalogueDao.deleteBeerCatalogue()
     }
 
-    suspend fun getRemoteKeys(id: Int): BeerRemoteKeys {
+    override suspend fun getRemoteKeys(id: Int): BeerRemoteKeys {
         return beerCatalogueRemoteKeysDao.getRemoteKeys(id)
     }
 
-    private suspend fun addAllRemoteKeys(beerRemoteKeys: List<BeerRemoteKeys>) {
+    override suspend fun addAllRemoteKeys(beerRemoteKeys: List<BeerRemoteKeys>) {
         beerCatalogueRemoteKeysDao.addAllRemoteKeys(beerRemoteKeys)
     }
 
-    private suspend fun deleteRemoteKeys() {
+    override suspend fun deleteRemoteKeys() {
         beerCatalogueRemoteKeysDao.deleteAllRemoteKeys()
     }
 
-    suspend fun storeBeerCatalogueAndRemoteKeysTransaction(
+    override suspend fun storeBeerCatalogueAndRemoteKeysTransaction(
         beerCatalogue: List<BeerEntity>,
         prevPage: Int?,
         nextPage: Int?,
-        loadType: LoadType
+        loadType: LoadType,
+        lastTimeUpdated: Long
     ) {
-
         try {
             beerCatalogueDatabase.withTransaction {
 
@@ -54,14 +55,13 @@ class LocalDbSourceImpl @Inject constructor(
                     deleteRemoteKeys()
                 }
 
-                Log.d("oxoxtushar", "database: ${beerCatalogue.get(1).id}")
-
                 addBeerCatalogue(beerCatalogue)
                 val keys = beerCatalogue.map { beer ->
                     BeerRemoteKeys(
                         id = beer.id,
                         prevPage = prevPage,
-                        nextPage = nextPage
+                        nextPage = nextPage,
+                        lastTimeUpdated = lastTimeUpdated
                     )
                 }
                 addAllRemoteKeys(keys)

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -31,6 +32,7 @@ class BeerDetailsFragment : Fragment() {
 
         Glide.with(requireContext())
             .load(args.beerDetails.imageURL)
+            .placeholder(ResourcesCompat.getDrawable(resources, R.drawable.ic_placeholder_beer, requireContext().theme))
             .into(binding.ivBeerImage)
 
         binding.apply {

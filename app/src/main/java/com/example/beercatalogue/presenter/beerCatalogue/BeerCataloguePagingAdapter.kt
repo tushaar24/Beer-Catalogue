@@ -4,9 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.beercatalogue.Application
+import com.example.beercatalogue.R
 import com.example.beercatalogue.data.common.entity.BeerEntity
 import com.example.beercatalogue.databinding.ItemBeerBinding
 import com.squareup.picasso.Picasso
@@ -29,9 +32,12 @@ class BeerCataloguePagingAdapter(
             position: Int,
             itemCount: Int
         ) {
-            Picasso.get()
-                .load(beer.imageURL)
-                .into(binding.ivBeerImage)
+            ResourcesCompat.getDrawable(context.resources, R.drawable.ic_placeholder_beer, context.theme)?.let {
+                Picasso.get()
+                    .load(beer.imageURL)
+                    .placeholder(it)
+                    .into(binding.ivBeerImage)
+            }
 
             binding.tvBeerName.text = beer.name
 

@@ -67,7 +67,6 @@ class LocalDbSourceImpl @Inject constructor(
                 addAllRemoteKeys(keys)
             }
         } catch (e: Exception) {
-            Log.d("oxoxtushar", "something went wrong")
         }
     }
 }

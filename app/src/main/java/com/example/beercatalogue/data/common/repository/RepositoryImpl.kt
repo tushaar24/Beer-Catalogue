@@ -17,7 +17,8 @@ class RepositoryImpl @Inject constructor(
     @OptIn(ExperimentalPagingApi::class)
     override fun getCachedBeerCatalogue() = Pager(
         config = PagingConfig(
-            pageSize = 20
+            pageSize = 20,
+            maxSize = 80
         ),
         remoteMediator = BeerCatalogueRemoteMediator(this),
         pagingSourceFactory = { local.getBeerCatalogue() }

@@ -90,11 +90,11 @@ class BeerCataloguePagingAdapter(
 
     object DiffUtil : androidx.recyclerview.widget.DiffUtil.ItemCallback<BeerEntity>() {
         override fun areItemsTheSame(oldItem: BeerEntity, newItem: BeerEntity): Boolean {
-            return false
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: BeerEntity, newItem: BeerEntity): Boolean {
-            return false
+            return oldItem.id  == newItem.id
         }
 
     }
@@ -109,7 +109,6 @@ class BeerCataloguePagingAdapter(
         if (currentBeerData != null) {
             holder.bind(currentBeerData, onClick, context, position, itemCount)
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BeerCatalogueViewHolder {

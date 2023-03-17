@@ -44,7 +44,7 @@ class BeerCatalogueListFragment : Fragment() {
 
         val mAdapter = BeerCataloguePagingAdapter(onClick, requireContext())
         binding.rvBeerCatalogue.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.rvBeerCatalogue.adapter = mAdapter
+        binding.rvBeerCatalogue.adapter = mAdapter.withLoadStateFooter(BeerLoadingAdapter())
         binding.progressBar.visibility = View.VISIBLE
 
         mAdapter.isDataSetChanged.observe(requireActivity()) { isDataChanged ->
